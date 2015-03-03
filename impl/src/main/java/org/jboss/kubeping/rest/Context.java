@@ -20,12 +20,18 @@ package org.jboss.kubeping.rest;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public class Context {
+    private Pod pod;
     private Container container;
     private String pingPortName;
 
-    public Context(Container container, String pingPortName) {
+    public Context(Pod pod, Container container, String pingPortName) {
+        this.pod = pod;
         this.container = container;
         this.pingPortName = pingPortName;
+    }
+
+    public Pod getPod() {
+        return pod;
     }
 
     public Container getContainer() {

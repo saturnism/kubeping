@@ -40,6 +40,7 @@ public abstract class ServerTestBase extends TestBase {
         return 1;
     }
 
+    @Override
     protected Protocol createPing() {
         KubePing ping = new TestKubePing();
         ping.setHost("localhost");
@@ -56,7 +57,7 @@ public abstract class ServerTestBase extends TestBase {
         try (InputStream stream = url.openStream()) {
             PingData data = new PingData();
             data.readFrom(new DataInputStream(stream));
-            Assert.assertEquals(data, Utils.createPingData(channels[0]));
+            Assert.assertEquals(data, Utils.createPingData(channels[0], true));
         }
     }
 

@@ -22,6 +22,7 @@ import org.jgroups.Channel;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public class JDKServerFactory implements ServerFactory {
+    @Override
     public boolean isAvailable() {
         try {
             return UndertowServerFactory.class.getClassLoader().loadClass("com.sun.net.httpserver.HttpServer") != null;
@@ -30,6 +31,7 @@ public class JDKServerFactory implements ServerFactory {
         }
     }
 
+    @Override
     public Server create(int port, Channel channel) {
         return new JDKServer(port, channel);
     }

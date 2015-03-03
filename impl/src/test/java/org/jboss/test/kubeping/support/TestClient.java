@@ -30,60 +30,62 @@ public class TestClient extends Client {
     private static final Map<String, String> ops = new HashMap<>();
 
     private final static String PODS = "{\n" +
-        "    \"kind\": \"PodList\",\n" +
-        "    \"apiVersion\": \"v1beta1\",\n" +
-        "    \"items\": [\n" +
-        "        {\n" +
-        "            \"id\": \"my-pod-1\",\n" +
-        "            \"labels\": {\n" +
-        "                \"name\": \"testRun\",\n" +
-        "                \"replicationController\": \"testRun\"\n" +
-        "            },\n" +
-        "            \"desiredState\": {\n" +
-        "              \"manifest\": {\n" +
-        "                \"version\": \"v1beta1\",\n" +
-        "                \"id\": \"my-pod-1\",\n" +
-        "                \"containers\": [{\n" +
-        "                  \"name\": \"nginx\",\n" +
-        "                  \"image\": \"dockerfile/nginx\",\n" +
-        "                  \"ports\": [{\n" +
-        "                    \"name\": \"output\",\n" +
-        "                    \"hostPort\": 8080,\n" +
-        "                    \"containerPort\": 80\n" +
-        "                  }]\n" +
-        "                }]\n" +
-        "              }\n" +
-        "            },\n" +
-        "            \"currentState\": {\n" +
-        "                \"host\": \"host-1\"\n" +
-        "            }\n" +
-        "        },\n" +
-        "        {\n" +
-        "            \"id\": \"my-pod-2\",\n" +
-        "            \"labels\": {\n" +
-        "                \"name\": \"testRun\",\n" +
-        "                \"replicationController\": \"testRun\"\n" +
-        "            },\n" +
-        "            \"desiredState\": {\n" +
-        "              \"manifest\": {\n" +
-        "                \"version\": \"v1beta1\",\n" +
-        "                \"id\": \"my-pod-2\",\n" +
-        "                \"containers\": [{\n" +
-        "                  \"name\": \"nginx\",\n" +
-        "                  \"image\": \"dockerfile/nginx\",\n" +
-        "                  \"ports\": [{\n" +
-        "                    \"hostPort\": 8080,\n" +
-        "                    \"containerPort\": 80\n" +
-        "                  }]\n" +
-        "                }]\n" +
-        "              }\n" +
-        "            },\n" +
-        "            \"currentState\": {\n" +
-        "                \"host\": \"host-2\"\n" +
-        "            }\n" +
-        "        }\n" +
-        "    ]\n" +
-        "}";
+            "    \"kind\": \"PodList\",\n" +
+            "    \"apiVersion\": \"v1beta1\",\n" +
+            "    \"items\": [\n" +
+            "        {\n" +
+            "            \"id\": \"my-pod-1\",\n" +
+            "            \"labels\": {\n" +
+            "                \"name\": \"testRun\",\n" +
+            "                \"replicationController\": \"testRun\"\n" +
+            "            },\n" +
+            "            \"desiredState\": {\n" +
+            "              \"manifest\": {\n" +
+            "                \"version\": \"v1beta1\",\n" +
+            "                \"id\": \"my-pod-1\",\n" +
+            "                \"containers\": [{\n" +
+            "                  \"name\": \"nginx\",\n" +
+            "                  \"image\": \"dockerfile/nginx\",\n" +
+            "                  \"ports\": [{\n" +
+            "                    \"name\": \"output\",\n" +
+            "                    \"hostPort\": 8080,\n" +
+            "                    \"containerPort\": 80\n" +
+            "                  }]\n" +
+            "                }]\n" +
+            "              }\n" +
+            "            },\n" +
+            "            \"currentState\": {\n" +
+            "                \"status\": \"Running\",\n" +
+            "                \"host\": \"host-1\"\n" +
+            "            }\n" +
+            "        },\n" +
+            "        {\n" +
+            "            \"id\": \"my-pod-2\",\n" +
+            "            \"labels\": {\n" +
+            "                \"name\": \"testRun\",\n" +
+            "                \"replicationController\": \"testRun\"\n" +
+            "            },\n" +
+            "            \"desiredState\": {\n" +
+            "              \"manifest\": {\n" +
+            "                \"version\": \"v1beta1\",\n" +
+            "                \"id\": \"my-pod-2\",\n" +
+            "                \"containers\": [{\n" +
+            "                  \"name\": \"nginx\",\n" +
+            "                  \"image\": \"dockerfile/nginx\",\n" +
+            "                  \"ports\": [{\n" +
+            "                    \"hostPort\": 8080,\n" +
+            "                    \"containerPort\": 80\n" +
+            "                  }]\n" +
+            "                }]\n" +
+            "              }\n" +
+            "            },\n" +
+            "            \"currentState\": {\n" +
+            "                \"status\": \"Running\",\n" +
+            "                \"host\": \"host-2\"\n" +
+            "            }\n" +
+            "        }\n" +
+            "    ]\n" +
+            "}";
 
     static {
         ops.put("pods", PODS);

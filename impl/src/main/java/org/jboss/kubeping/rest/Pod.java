@@ -26,6 +26,15 @@ public class Pod {
     private String host;
     private String podIP;
     private List<Container> containers = new ArrayList<>();
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public void setHost(String host) {
         this.host = host;

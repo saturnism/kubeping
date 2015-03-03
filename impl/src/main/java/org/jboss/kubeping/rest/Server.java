@@ -22,4 +22,5 @@ package org.jboss.kubeping.rest;
 public interface Server {
     void start() throws Exception;
     void stop();
+    void coord(boolean coord);
 }

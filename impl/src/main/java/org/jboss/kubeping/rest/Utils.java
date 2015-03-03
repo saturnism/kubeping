@@ -17,14 +17,12 @@
 package org.jboss.kubeping.rest;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.jgroups.Address;
 import org.jgroups.Channel;
 import org.jgroups.Event;
 import org.jgroups.PhysicalAddress;
-import org.jgroups.View;
 import org.jgroups.protocols.PingData;
 
 /**
@@ -60,14 +58,13 @@ public class Utils {
      * @param channel the channel
      * @return ping data
      */
-    public static PingData createPingData(Channel channel) {
+    public static PingData createPingData(Channel channel, boolean coord) {
         Address address = channel.getAddress();
-        View view = channel.getView();
         boolean is_server = false;
         String logical_name = channel.getName();
         PhysicalAddress paddr = (PhysicalAddress) channel.down(new Event(Event.GET_PHYSICAL_ADDRESS, address));
 
-        return new PingData(address, view, is_server, logical_name, Collections.singleton(paddr));
+        return new PingData(address, is_server, logical_name, paddr).coord(coord);
     }
 
 }

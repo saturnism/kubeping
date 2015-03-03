@@ -38,6 +38,7 @@ public class JDKServer extends AbstractServer {
         super(port, channel);
     }
 
+    @Override
     public void start() throws Exception {
         InetSocketAddress address = new InetSocketAddress("0.0.0.0", port);
         server = HttpServer.create(address, 0);
@@ -48,6 +49,7 @@ public class JDKServer extends AbstractServer {
         server.start();
     }
 
+    @Override
     public void stop() {
         if (server != null) {
             server.stop(0);
@@ -55,10 +57,11 @@ public class JDKServer extends AbstractServer {
     }
 
     private class Handler implements HttpHandler {
+        @Override
         public void handle(HttpExchange exchange) throws IOException {
             exchange.sendResponseHeaders(200, 0);
             try {
-                PingData data = Utils.createPingData(channel);
+                PingData data = Utils.createPingData(channel, coord);
                 try (OutputStream outputStream = exchange.getResponseBody()) {
                     data.writeTo(new DataOutputStream(outputStream));
                 }

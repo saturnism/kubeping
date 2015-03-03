@@ -19,6 +19,7 @@ package org.jboss.kubeping.rest;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -26,12 +27,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.dmr.ModelNode;
+import org.jgroups.logging.Log;
+import org.jgroups.logging.LogFactory;
 import org.jgroups.protocols.PingData;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public class Client {
+    protected final Log log = LogFactory.getLog(this.getClass());
+
     private String rootURL;
 
     protected Client() {
@@ -41,13 +46,18 @@ public class Client {
         this.rootURL = String.format("http://%s:%s/api/%s", host, port, version);
     }
 
-    private static InputStream openStream(String url, int tries, long sleep) {
+    private InputStream openStream(String url, int tries, long sleep) {
         while (tries > 0) {
             tries--;
             try {
                 URL xurl = new URL(url);
-                return xurl.openStream();
-            } catch (Throwable ignore) {
+                HttpURLConnection conn = (HttpURLConnection) xurl.openConnection();
+                conn.setConnectTimeout(1000);
+                conn.setReadTimeout(2000);
+                conn.connect();
+                return conn.getInputStream();
+            } catch (Throwable e) {
+                log.warn(String.format("Cannot open stream [%s], [%d] more tries", url, tries), e);
             }
             try {
                 Thread.sleep(sleep);
@@ -89,6 +99,8 @@ public class Client {
             Pod pod = new Pod();
 
             ModelNode currentState = item.get("currentState");
+            ModelNode status = currentState.get("status");
+            pod.setStatus(status.asString());
             ModelNode host = currentState.get("host");
             pod.setHost(host.asString());
             ModelNode podIP = currentState.get("podIP");
@@ -98,7 +110,9 @@ public class Client {
             ModelNode manifest = desiredState.get("manifest");
 
             ModelNode ctns = manifest.get("containers");
-            if (ctns.isDefined() == false) continue;
+            if (ctns.isDefined() == false) {
+                continue;
+            }
 
             List<ModelNode> containers = ctns.asList();
             for (ModelNode c : containers) {
@@ -107,14 +121,16 @@ public class Client {
                 container.setName(cname);
 
                 ModelNode pts = c.get("ports");
-                if (pts.isDefined() == false) continue;
+                if (pts.isDefined() == false) {
+                    continue;
+                }
 
                 List<ModelNode> ports = pts.asList();
                 for (ModelNode p : ports) {
                     String pname = p.get("name").asString();
                     Port port = new Port(pname,
                             p.get("hostPort").isDefined() ? p.get("hostPort").asInt() : null,
-                            p.get("containerPort").isDefined() ? p.get("containerPort").asInt() : null);
+                                    p.get("containerPort").isDefined() ? p.get("containerPort").asInt() : null);
                     container.addPort(port);
                 }
 
@@ -127,6 +143,11 @@ public class Client {
     }
 
     public boolean accept(Context context) {
+        Pod pod = context.getPod();
+        if (!"Running".equals(pod.getStatus())) {
+            return false;
+        }
+
         Container container = context.getContainer();
         List<Port> ports = container.getPorts();
         if (ports != null) {

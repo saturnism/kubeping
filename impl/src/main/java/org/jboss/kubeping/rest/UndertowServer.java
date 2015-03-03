@@ -34,6 +34,7 @@ public class UndertowServer extends AbstractServer {
         super(port, channel);
     }
 
+    @Override
     public void start() throws Exception {
         Undertow.Builder builder = Undertow.builder();
         builder.addHttpListener(port, "0.0.0.0"); // bind to all
@@ -42,15 +43,17 @@ public class UndertowServer extends AbstractServer {
         undertow.start();
     }
 
+    @Override
     public void stop() {
         undertow.stop();
     }
 
     private class Handler implements HttpHandler {
+        @Override
         public void handleRequest(HttpServerExchange exchange) throws Exception {
             exchange.startBlocking();
 
-            PingData data = Utils.createPingData(channel);
+            PingData data = Utils.createPingData(channel, coord);
             data.writeTo(new DataOutputStream(exchange.getOutputStream()));
         }
     }
